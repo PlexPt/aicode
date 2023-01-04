@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pokemon App</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<h1>Pokemon List</h1>
+<ul id="pokemon-list"></ul>
+
+<script>
+
+    const fetchPokemon = async (url) => {
+        const response = await axios.get(url);
+        const pokemon = response.data.results;
+        const pokemonList = document.getElementById('pokemon-list');
+        pokemon.forEach(p => {
+
+                const str = p.url;
+                const match = str.split("/")[6];
+                console.log(match); // "233"
+                var u = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/'
+                    + match + '.svg';
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<img src="${u}"/> ${p.name}`;
+                pokemonList.appendChild(listItem);
+
+            }
+        );
+
+
+        let next = response.data.next;
+        await fetchPokemon(next);
+    };
+
+    fetchPokemon('https://pokeapi.co/api/v2/pokemon/');
+
+</script>
+</body>
+</html>
